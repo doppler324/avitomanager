@@ -4,6 +4,8 @@ import VueRouter from 'vue-router'
 // Routes
 import { canNavigate } from '@/libs/acl/routeProtection'
 import { isUserLoggedIn, getUserData, getHomeRouteForLoggedInUser } from '@/auth/utils'
+import ads from './routes/ads'
+import projects from './routes/projects'
 import apps from './routes/apps'
 import dashboard from './routes/dashboard'
 import uiElements from './routes/ui-elements/index'
@@ -22,6 +24,8 @@ const router = new VueRouter({
   },
   routes: [
     { path: '/', redirect: { name: 'apps-users-list' } },
+    ...ads,
+    ...projects,
     ...apps,
     ...dashboard,
     ...pages,

@@ -33,6 +33,7 @@ export default function useAppCustomizer() {
   const layoutTypeOptions = [
     { text: 'Vertical', value: 'vertical' },
     { text: 'Horizontal', value: 'horizontal' },
+    { text: 'HorizontalWithoutMenu', value: 'horizontalWithoutMenu' },
   ]
 
   // Navbar

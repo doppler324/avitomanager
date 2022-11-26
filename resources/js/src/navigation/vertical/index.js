@@ -31,6 +31,8 @@ tagVariant
 
 */
 import dashboard from './dashboard'
+import ads from './ads'
+import projects from './projects'
 import appsAndPages from './apps-and-pages'
 import others from './others'
 import chartsAndMaps from './charts-and-maps'
@@ -38,4 +40,4 @@ import uiElements from './ui-elements'
 import formAndTable from './forms-and-table'
 
 // Array of sections
-export default [...dashboard, ...appsAndPages, ...uiElements, ...formAndTable, ...chartsAndMaps, ...others]
+export default [...ads, ...projects, ...dashboard, ...appsAndPages, ...uiElements, ...formAndTable, ...chartsAndMaps, ...others]
