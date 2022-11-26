@@ -27,7 +27,6 @@ import store from '@/store'
 
 const LayoutVertical = () => import('@/layouts/vertical/LayoutVertical.vue')
 const LayoutHorizontal = () => import('@/layouts/horizontal/LayoutHorizontal.vue')
-const LayoutHorizontalWithoutMenu = () => import('@/layouts/horizontal/LayoutHorizontalWithoutMenu.vue')
 const LayoutFull = () => import('@/layouts/full/LayoutFull.vue')
 
 export default {
@@ -37,7 +36,6 @@ export default {
     LayoutHorizontal,
     LayoutVertical,
     LayoutFull,
-    LayoutHorizontalWithoutMenu,
 
     ScrollToTop
   },

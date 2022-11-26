@@ -4,7 +4,8 @@ export default [
         name: 'projects',
         component: () => import('@/views/projects/Projects.vue'),
         meta: {
-            layout: 'horizontalWithoutMenu'
+            layout: 'horizontal',
+
         }
 
     }

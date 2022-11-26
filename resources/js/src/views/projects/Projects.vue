@@ -157,6 +157,7 @@ export default {
     },
     data() {
         return {
+            menuHidden: this.$store.state.appConfig.layout.menu.hidden,
             pageLength: 10,
             dir: false,
             columns: [
@@ -204,6 +205,7 @@ export default {
         }
     },
     computed: {
+
         statusVariant() {
             const statusColor = {
                 /* eslint-disable key-spacing */
@@ -229,8 +231,13 @@ export default {
         },
     },
     created() {
+        this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
         this.$http.get('/good-table/basic')
             .then(res => { this.rows = res.data })
+    },
+    destroyed() {
+        // Restore the state value of `appConfig` when page/SFC is destroyed
+        this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', this.menuHidden)
     },
 }
 </script>

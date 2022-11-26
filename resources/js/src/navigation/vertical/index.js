@@ -32,7 +32,7 @@ tagVariant
 */
 import dashboard from './dashboard'
 import ads from './ads'
-import projects from './projects'
+import projects from '../horizontal/projects'
 import appsAndPages from './apps-and-pages'
 import others from './others'
 import chartsAndMaps from './charts-and-maps'
