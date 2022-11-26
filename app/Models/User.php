@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'projects'
     ];
 
     /**
@@ -40,5 +41,11 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'projects' => 'array'
     ];
+
+    public function projects()
+    {
+        return $this->hasMany('App\Models\ProjectAvito');
+    }
 }
