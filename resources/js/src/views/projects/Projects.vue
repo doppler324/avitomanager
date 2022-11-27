@@ -73,7 +73,7 @@
                     icon="TrashIcon"
                     class="mr-50"
                 />
-                <span>Delete</span>
+                <span>Удалить</span>
               </b-dropdown-item>
             </b-dropdown>
           </span>
@@ -93,7 +93,7 @@
                 <div class="d-flex justify-content-between flex-wrap">
                     <div class="d-flex align-items-center mb-0 mt-1">
             <span class="text-nowrap ">
-              Showing 1 to
+              Показать 1 из
             </span>
                         <b-form-select
                             v-model="pageLength"
@@ -101,7 +101,7 @@
                             class="mx-1"
                             @input="(value)=>props.perPageChanged({currentPerPage:value})"
                         />
-                        <span class="text-nowrap"> of {{ props.total }} entries </span>
+                        <span class="text-nowrap"> из {{ props.total }} проектов </span>
                     </div>
                     <div>
                         <b-pagination
@@ -140,7 +140,7 @@
 import {
     BAvatar, BBadge, BPagination, BFormGroup, BFormInput, BFormSelect, BDropdown, BDropdownItem,
 } from 'bootstrap-vue'
-import { VueGoodTable } from 'vue-good-table'
+import {VueGoodTable} from 'vue-good-table'
 import store from '@/store/index'
 
 export default {
@@ -209,11 +209,11 @@ export default {
         statusVariant() {
             const statusColor = {
                 /* eslint-disable key-spacing */
-                Current      : 'light-primary',
-                Professional : 'light-success',
-                Rejected     : 'light-danger',
-                Resigned     : 'light-warning',
-                Applied      : 'light-info',
+                Current: 'light-primary',
+                Professional: 'light-success',
+                Rejected: 'light-danger',
+                Resigned: 'light-warning',
+                Applied: 'light-info',
                 /* eslint-enable key-spacing */
             }
 
@@ -232,8 +232,10 @@ export default {
     },
     created() {
         this.$store.commit('appConfig/UPDATE_NAV_MENU_HIDDEN', true)
-        this.$http.get('/good-table/basic')
-            .then(res => { this.rows = res.data })
+        this.$http.get('/projects')
+            .then(res => {
+                this.rows = res.data
+            })
     },
     destroyed() {
         // Restore the state value of `appConfig` when page/SFC is destroyed
@@ -241,6 +243,6 @@ export default {
     },
 }
 </script>
-<style lang="scss" >
+<style lang="scss">
 @import '~@resources/scss/vue/libs/vue-good-table.scss';
 </style>
