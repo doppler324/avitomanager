@@ -23,7 +23,6 @@ title
 route: [route_obj/route_name] (I have to resolve name somehow from the route obj)
 
 */
-import projects from './projects'
 import dashboard from './dashboard'
 import apps from './apps'
 import pages from './pages'
