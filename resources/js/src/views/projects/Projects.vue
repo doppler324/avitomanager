@@ -3,6 +3,10 @@
         <!-- table -->
         <vue-good-table
             :columns="columns"
+            :pagination-options="{
+        enabled: true,
+        perPage:pageLength
+      }"
             :rows="rows"
             :rtl="direction"
             :search-options="{
@@ -16,10 +20,6 @@
         clearSelectionText: 'clear',
         disableSelectInfo: true, // disable the select info panel on top
         selectAllByGroup: true, // when used in combination with a grouped table, add a checkbox in the header row to check/uncheck the entire group
-      }"
-            :pagination-options="{
-        enabled: true,
-        perPage:pageLength
       }"
         >
             <template
@@ -50,28 +50,28 @@
                 <span v-else-if="props.column.field === 'action'">
           <span>
             <b-dropdown
-                variant="link"
-                toggle-class="text-decoration-none"
                 no-caret
+                toggle-class="text-decoration-none"
+                variant="link"
             >
               <template v-slot:button-content>
                 <feather-icon
+                    class="text-body align-middle mr-25"
                     icon="MoreVerticalIcon"
                     size="16"
-                    class="text-body align-middle mr-25"
                 />
               </template>
               <b-dropdown-item>
                 <feather-icon
-                    icon="Edit2Icon"
                     class="mr-50"
+                    icon="Edit2Icon"
                 />
                 <span>Edit</span>
               </b-dropdown-item>
               <b-dropdown-item>
                 <feather-icon
-                    icon="TrashIcon"
                     class="mr-50"
+                    icon="TrashIcon"
                 />
                 <span>Удалить</span>
               </b-dropdown-item>
@@ -105,15 +105,15 @@
                     </div>
                     <div>
                         <b-pagination
-                            :value="1"
-                            :total-rows="props.total"
                             :per-page="pageLength"
+                            :total-rows="props.total"
+                            :value="1"
+                            align="right"
+                            class="mt-1 mb-0"
                             first-number
                             last-number
-                            align="right"
-                            prev-class="prev-item"
                             next-class="next-item"
-                            class="mt-1 mb-0"
+                            prev-class="prev-item"
                             @input="(value)=>props.pageChanged({currentPage:value})"
                         >
                             <template #prev-text>
