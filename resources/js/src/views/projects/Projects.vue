@@ -144,6 +144,10 @@
                     Добавить
                 </b-button>
                 <b-modal id="modal-1" title="Добавить проект">
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/projects
                 </b-modal>
             </div>
         </vue-good-table>
