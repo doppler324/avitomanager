@@ -22,24 +22,12 @@ class ProjectAvito extends Model
     'name',
     'balance',
     'id_avito',
-    'name',
+    'id_avito_user',
+    'client_id',
+    'client_secret',
     'profile_url',
     'email',
     'phone',
-    'ads',
     'status'
   ];
-  /**
-   * The attributes that should be cast.
-   *
-   * @var array<string, string>
-   */
-  protected $casts = [
-    'ads' => 'array'
-  ];
-
-  public function ads()
-  {
-    return $this->hasMany('App\Models\AdAvito');
-  }
 }
