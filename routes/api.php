@@ -35,7 +35,10 @@ Route::get('user_ads/{user_id}', [AdAvitoApiController::class, 'getProjectAds'])
 Route::get('projects', [PC::class, 'getProjects']);
 
 // роуты групп проектов
-Route::get('groupsprojects/add', [ProjectsGroupsController::class, 'store']);
 Route::get('groupsprojects', [ProjectsGroupsController::class, 'index']);
+Route::get('groupsprojects/add', [ProjectsGroupsController::class, 'store']);
+Route::get('groupsprojects/get/{id}', [ProjectsGroupsController::class, 'show']);
+Route::get('groupsprojects/update/{id}', [ProjectsGroupsController::class, 'update']);
+Route::get('groupsprojects/delete/{id}', [ProjectsGroupsController::class, 'destroy']);
 
 
