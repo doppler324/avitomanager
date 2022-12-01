@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserApiController;
 use App\Http\Controllers\Api\AdAvitoApiController;
+use App\Http\Controllers\Api\ProjectsGroupsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,5 +33,9 @@ Route::get('user_ads/{user_id}', [AdAvitoApiController::class, 'getProjectAds'])
 
 // роуты проектов
 Route::get('projects', [PC::class, 'getProjects']);
+
+// роуты групп проектов
+Route::get('groupsprojects/add', [ProjectsGroupsController::class, 'store']);
+Route::get('groupsprojects', [ProjectsGroupsController::class, 'index']);
 
 
