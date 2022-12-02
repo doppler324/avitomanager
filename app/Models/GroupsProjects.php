@@ -18,4 +18,21 @@ class GroupsProjects extends Model
         'name',
         'user_id',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        # Проверка данных пользователя перед сохранением
+        static::saving(function($groupsprojects)  // Функция обработчика в качестве аргумента принимает объект модели
+        {
+            // GПроверяем количество групп пользователя
+            if ( $groupsprojects->where('user_id', auth()->user()->id)->count() >= 10 ) return false; // Отменяем операцию сохранения
+        });
+        # Выполняем действия после сохранения
+        static::saved(function($groupsprojects)
+        {
+            // Посылаем сообщение с регистрационными данными
+        });
+    }
 }

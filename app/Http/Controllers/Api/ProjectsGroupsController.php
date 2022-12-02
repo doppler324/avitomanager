@@ -33,14 +33,17 @@ class ProjectsGroupsController extends Controller
      */
     public function store(Request $request, ProjectsGroupsRequest $req): \Illuminate\Http\JsonResponse
     {
-        // проверка на количество добавленных групп
-        $groupproject = new GroupsProjects;
-        $groupprojectcount = $groupproject->where
-        if($projectsgroupscount == 10){
-
-        }
+        // получаем данные из запроса
         $input = $request->all();
+        // добавляем группу, если меньше 10 групп
         $projectgroup = GroupsProjects::create($input);
+        if(!$projectgroup){
+            return response()->json([
+                "success" => false,
+                "message" => "Ошибка: не более 10 групп.",
+                "data" => null
+            ]);
+        }
         return response()->json([
             "success" => true,
             "message" => "Группа проектов добавлена успешно.",
