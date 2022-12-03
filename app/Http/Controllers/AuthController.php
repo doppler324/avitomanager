@@ -7,18 +7,13 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\User;
 use Validator;
+use App\Http\Requests\registerRequest;
+use App\Http\Requests\loginRequest;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(Request $request, registerRequest $req)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|',
-            'c_password'=>'required|same:password',
-        ]);
-
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
@@ -43,22 +38,15 @@ class AuthController extends Controller
      * @return [string] token_type
      * @return [string] expires_at
      */
-    public function login(Request $request)
+    public function login(Request $request, loginRequest $req)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-            'remember_me' => 'boolean'
-        ]);
         $credentials = request(['email', 'password']);
         if(!Auth::attempt($credentials))
             return response()->json([
                 'message' => 'Неавторизован: email или пароль не найдены'
             ], 401);
 
-        $user = Auth::user();
-
-        $token = $user->createToken($request->token_name);
+        $token = $request->user()->createToken("token request");
 
         if ($request->remember_me)
             $token->expires_at = Carbon::now()->addWeeks(1);
