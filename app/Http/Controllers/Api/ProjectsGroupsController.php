@@ -7,6 +7,7 @@ use App\Models\GroupsProjects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\ProjectsGroupsRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectsGroupsController extends Controller
 {
@@ -31,12 +32,14 @@ class ProjectsGroupsController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request, ProjectsGroupsRequest $req): \Illuminate\Http\JsonResponse
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         // получаем данные из запроса
         $input = $request->all();
         // добавляем группу, если меньше 10 групп
         $projectgroup = GroupsProjects::create($input);
+        return response()->json([$request->user()->id
+        ]);
         if(!$projectgroup){
             return response()->json([
                 "success" => false,

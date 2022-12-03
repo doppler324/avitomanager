@@ -5,6 +5,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class GroupsProjects extends Model
 {
@@ -26,8 +27,9 @@ class GroupsProjects extends Model
         # Проверка данных пользователя перед сохранением
         static::saving(function($groupsprojects)  // Функция обработчика в качестве аргумента принимает объект модели
         {
-            // GПроверяем количество групп пользователя
-            if ( $groupsprojects->where('user_id', auth()->user()->id)->count() >= 10 ) return false; // Отменяем операцию сохранения
+            // Проверяем количество групп пользователя
+            if ( $groupsprojects->where('user_id', Auth::id())->count() >= 10 ) return false; // Отменяем операцию сохранения
+
         });
         # Выполняем действия после сохранения
         static::saved(function($groupsprojects)
