@@ -24,8 +24,20 @@ class ProjectsGroupsRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:3|max:30|unique:groups_projects',
-            'user_id' => 'required|min:3|max:30',
+            'name' => 'required|min:3|max:30',
+            'user_id' => 'required|min:1|max:30',
+        ];
+    }
+
+    /**
+     * Получить сообщения об ошибках для определенных правил валидации.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'name.unique' => 'Такая группа уже есть'
         ];
     }
 }

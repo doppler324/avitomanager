@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserApiController;
 use App\Http\Controllers\Api\AdAvitoApiController;
 use App\Http\Controllers\Api\ProjectsGroupsController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,27 +19,34 @@ use App\Http\Controllers\Api\ProjectsGroupsController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::post('register', [AuthController::class, 'register']);
+
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::get('logout', [AuthController::class, 'logout']);
+        Route::get('user', [AuthController::class, 'user']);
+    });
 });
 
+Route::group(['middleware' => 'auth:sanctum'], function () {
 // роуты по пользователю
-Route::get('user/{id}', [UserApiController::class, 'getUser']);
-Route::get('users', [UserApiController::class, 'getUsers']);
+    Route::get('user/{id}', [UserApiController::class, 'getUser']);
+    Route::get('users', [UserApiController::class, 'getUsers']);
 
 // роуты по объявлениям
-Route::get('ad/{id}', [AdAvitoApiController::class, 'getAd']);
-Route::get('ads', [AdAvitoApiController::class, 'getAds']);
-Route::get('user_ads/{user_id}', [AdAvitoApiController::class, 'getProjectAds']);
+    Route::get('ad/{id}', [AdAvitoApiController::class, 'getAd']);
+    Route::get('ads', [AdAvitoApiController::class, 'getAds']);
+    Route::get('user_ads/{user_id}', [AdAvitoApiController::class, 'getProjectAds']);
 
 // роуты проектов
-Route::get('projects', [PC::class, 'getProjects']);
+    Route::get('projects', [PC::class, 'getProjects']);
 
 // роуты групп проектов
-Route::get('groupsprojects', [ProjectsGroupsController::class, 'index']);
-Route::get('groupsprojects/add', [ProjectsGroupsController::class, 'store']);
-Route::get('groupsprojects/get/{id}', [ProjectsGroupsController::class, 'show']);
-Route::get('groupsprojects/update/{id}', [ProjectsGroupsController::class, 'update']);
-Route::get('groupsprojects/delete/{id}', [ProjectsGroupsController::class, 'destroy']);
+    Route::get('groupsprojects', [ProjectsGroupsController::class, 'index']);
+    Route::get('groupsprojects/add', [ProjectsGroupsController::class, 'store']);
+    Route::get('groupsprojects/get/{id}', [ProjectsGroupsController::class, 'show']);
+    Route::get('groupsprojects/update/{id}', [ProjectsGroupsController::class, 'update']);
+    Route::get('groupsprojects/delete/{id}', [ProjectsGroupsController::class, 'destroy']);
 
-
+});

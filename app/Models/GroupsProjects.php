@@ -25,16 +25,13 @@ class GroupsProjects extends Model
         parent::boot();
 
         # Проверка данных пользователя перед сохранением
-        static::saving(function($groupsprojects)  // Функция обработчика в качестве аргумента принимает объект модели
+        static::Creating(function($groupsprojects)  // Функция обработчика в качестве аргумента принимает объект модели
         {
+            return $groupsprojects->where('user_id', Auth::id())->count();
             // Проверяем количество групп пользователя
-            if ( $groupsprojects->where('user_id', Auth::id())->count() >= 10 ) return false; // Отменяем операцию сохранения
-
-        });
-        # Выполняем действия после сохранения
-        static::saved(function($groupsprojects)
-        {
-            // Посылаем сообщение с регистрационными данными
+            if ( $groupsprojects->where('user_id', Auth::id())->count() >= 10 ) {
+                return array("success" => false, "message" => "Ошибка: не более 10 групп."); // Отменяем операцию сохранения
+            }
         });
     }
 }

@@ -32,18 +32,20 @@ class ProjectsGroupsController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request): \Illuminate\Http\JsonResponse
+    public function store(Request $request, ProjectsGroupsRequest $req): \Illuminate\Http\JsonResponse
     {
         // получаем данные из запроса
         $input = $request->all();
         // добавляем группу, если меньше 10 групп
-        $projectgroup = GroupsProjects::create($input);
-        return response()->json([$request->user()->id
-        ]);
-        if(!$projectgroup){
+        $groupProject = new GroupsProjects($input);
+        $is_save = $groupProject->save();
+
+        return response()->json($is_save);
+
+        if($projectgroup["success"] === false){
             return response()->json([
                 "success" => false,
-                "message" => "Ошибка: не более 10 групп.",
+                "message" => $projectgroup["message"],
                 "data" => null
             ]);
         }
