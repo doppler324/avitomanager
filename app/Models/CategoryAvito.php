@@ -15,7 +15,6 @@ class CategoryAvito extends Model
   protected $fillable = [
     'id',
     'name',
-    'avito_id',
     'parent_category_id',
     'depth_level'
   ];

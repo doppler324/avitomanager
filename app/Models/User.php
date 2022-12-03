@@ -19,8 +19,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
-        'projects'
+        'password'
     ];
 
     /**
@@ -39,12 +38,6 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'projects' => 'array'
+        'email_verified_at' => 'datetime'
     ];
-
-    public function projects()
-    {
-        return $this->hasMany('App\Models\ProjectAvito');
-    }
 }

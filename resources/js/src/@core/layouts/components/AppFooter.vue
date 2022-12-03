@@ -5,8 +5,6 @@
 
       <span class="d-none d-sm-inline-block">Все права защищены</span>
     </span>
-
-
   </p>
 </template>
 

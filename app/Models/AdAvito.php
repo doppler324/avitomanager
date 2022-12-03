@@ -27,7 +27,6 @@ class AdAvito extends Model
     'title',
     'url',
     'category_id',
-    'projectavito_id',
-    'category_name'
+    'project_id'
   ];
 }
