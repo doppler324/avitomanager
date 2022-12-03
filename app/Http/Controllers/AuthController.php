@@ -40,16 +40,17 @@ class AuthController extends Controller
      */
     public function login(Request $request, loginRequest $req)
     {
+
         $credentials = request(['email', 'password']);
         if(!Auth::attempt($credentials))
             return response()->json([
                 'message' => 'Неавторизован: email или пароль не найдены'
             ], 401);
-
         $token = $request->user()->createToken("token request");
-
         if ($request->remember_me)
             $token->expires_at = Carbon::now()->addWeeks(1);
+
+        return response()->json($token);
         $token->save();
         return response()->json([
             'access_token' => $token->plainTextToken,
