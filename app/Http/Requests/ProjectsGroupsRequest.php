@@ -5,8 +5,6 @@ namespace App\Http\Requests;
 use App\Models\GroupsProjects;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
-use App\Rules\UpTo10;
 
 class ProjectsGroupsRequest extends FormRequest
 {
@@ -32,25 +30,22 @@ class ProjectsGroupsRequest extends FormRequest
                 'required',
                 'min:3',
                 'max:30',
-                'unique:groups_projects',
+                // уникальное название группы для пользователя
+                function ($attribute, $value, $fail) {
+                    if (GroupsProjects::where('user_id', Auth::id())->where('name', $value)->exists()) {
+                        $fail('Название группы существует');
+                    }
+                },
                 // правило меньше 10 групп проектов на пользователя
+                function ($attribute, $value, $fail) {
+                    if (GroupsProjects::where('user_id', Auth::id())->count() >= 10) {
+                        $fail('Не больше 10 групп');
+                    }
+                },
                 // TODO сделать настройку для админа по количеству групп на пользователя, может быть в зависимости от тарифа
-                new UpTo10
             ],
             'user_id' => 'required|min:1|max:30',
 
-        ];
-    }
-
-    /**
-     * Получить сообщения об ошибках для определенных правил валидации.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'name.unique' => 'Такая группа уже есть'
         ];
     }
 }

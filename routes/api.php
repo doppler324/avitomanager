@@ -29,23 +29,27 @@ Route::group(['prefix' => 'auth'], function () {
     });
 });
 
+Route::group(['middleware' => 'auth:sanctum'], function() {
 // роуты по пользователю
-Route::get('user/{id}', [UserApiController::class, 'getUser']);
-Route::get('users', [UserApiController::class, 'getUsers']);
+    Route::get('user/{id}', [UserApiController::class, 'getUser']);
+    Route::get('users', [UserApiController::class, 'getUsers']);
 
 // роуты по объявлениям
-Route::get('ad/{id}', [AdAvitoApiController::class, 'getAd']);
-Route::get('ads', [AdAvitoApiController::class, 'getAds']);
-Route::get('user_ads/{user_id}', [AdAvitoApiController::class, 'getProjectAds']);
+    Route::get('ad/{id}', [AdAvitoApiController::class, 'getAd']);
+    Route::get('ads', [AdAvitoApiController::class, 'getAds']);
+    Route::get('user_ads/{user_id}', [AdAvitoApiController::class, 'getProjectAds']);
 
 // роуты проектов
-Route::get('projects', [PC::class, 'getProjects']);
+    Route::get('projects', [PC::class, 'getProjects']);
 
 // роуты групп проектов
-Route::get('groupsprojects', [ProjectsGroupsController::class, 'index']);
-Route::get('groupsprojects/add', [ProjectsGroupsController::class, 'store']);
-Route::get('groupsprojects/get/{id}', [ProjectsGroupsController::class, 'show']);
-Route::get('groupsprojects/update/{id}', [ProjectsGroupsController::class, 'update']);
-Route::get('groupsprojects/delete/{id}', [ProjectsGroupsController::class, 'destroy']);
+    Route::group(['prefix' => 'groupsprojects'], function () {
+        Route::get('/', [ProjectsGroupsController::class, 'index']);
+        Route::get('add', [ProjectsGroupsController::class, 'store']);
+        Route::get('get/{id}', [ProjectsGroupsController::class, 'show']);
+        Route::get('update/{id}', [ProjectsGroupsController::class, 'update']);
+        Route::get('delete/{id}', [ProjectsGroupsController::class, 'destroy']);
+    });
+});
 
 

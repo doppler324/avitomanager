@@ -38,21 +38,11 @@ class ProjectsGroupsController extends Controller
         $input = $request->all();
         // добавляем группу, если меньше 10 групп
         $groupProject = new GroupsProjects($input);
-        $is_save = $groupProject->save();
+        $groupProject->save();
 
-        return response()->json($groupProject);
-
-        if($projectgroup["success"] === false){
-            return response()->json([
-                "success" => false,
-                "message" => $projectgroup["message"],
-                "data" => null
-            ]);
-        }
         return response()->json([
             "success" => true,
-            "message" => "Группа проектов добавлена успешно.",
-            "data" => $projectgroup
+            "message" => "Группа проектов добавлена успешно."
         ]);
     }
 
@@ -66,7 +56,10 @@ class ProjectsGroupsController extends Controller
     {
         $projectgroup = GroupsProjects::find($id);
         if (is_null($projectgroup)) {
-            return $this->sendError('Product not found.');
+            return response()->json([
+                "success" => false,
+                "message" => "Группа проектов не найдена."
+            ]);
         }
         return response()->json([
             "success" => true,

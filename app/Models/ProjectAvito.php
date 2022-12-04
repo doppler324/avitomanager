@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class ProjectAvito extends Model
+class Project extends Model
 {
   use HasApiTokens, HasFactory, Notifiable;
   public $timestamps = false;
