@@ -19,9 +19,12 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password)
         ]);
+        $token = $user->createToken("token request")->plainTextToken;
         if($user->save()){
             return response()->json([
-                'message' => 'Пользователь успешно зарегистрирован!'
+                'message' => 'Пользователь успешно зарегистрирован!',
+                'accessToken' =>$token,
+                'token_type' => 'Bearer',
             ], 201);
         }else{
             return response()->json(['error'=>'Ошибка при регистрации пользователя']);
@@ -41,17 +44,12 @@ class AuthController extends Controller
     public function login(Request $request, loginRequest $req)
     {
         $credentials = request(['email', 'password']);
-        if(!Auth::attempt($credentials))
+        if(!Auth::attempt($credentials,$request->remember_me == 'on' ? true : false))
             return response()->json([
                 'message' => 'Неавторизован: email или пароль не найдены'
             ], 401);
-        $tokenResult = $request->user()->createToken("token request");
-
-        $token = $tokenResult->plainTextToken;
-
         return response()->json([
-            'accessToken' =>$token,
-            'token_type' => 'Bearer',
+            'success'=>'Пользователь успешно авторизован'
         ]);
     }
 

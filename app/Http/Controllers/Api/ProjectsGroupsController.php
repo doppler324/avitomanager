@@ -40,7 +40,7 @@ class ProjectsGroupsController extends Controller
         $groupProject = new GroupsProjects($input);
         $is_save = $groupProject->save();
 
-        return response()->json($is_save);
+        return response()->json($groupProject);
 
         if($projectgroup["success"] === false){
             return response()->json([
