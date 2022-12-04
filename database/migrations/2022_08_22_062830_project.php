@@ -15,13 +15,14 @@ return new class extends Migration
     {
       Schema::create('projects', function (Blueprint $table) {
         $table->bigIncrements('id');
-        $table->string('name')->nullable();
-        $table->bigInteger('balance');
-        $table->string('id_avito');
+        $table->string('name');
+        $table->string('client_id');
+        $table->string('client_secret');
+        $table->bigInteger('balance')->nullable();
         $table->string('profile_url')->nullable();
         $table->string('email')->nullable();
         $table->string('phone')->nullable();
-        $table->text('ads')->nullable();
+        $table->string('status')->nullable();
       });
     }
 

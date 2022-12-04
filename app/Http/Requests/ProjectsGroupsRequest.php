@@ -45,7 +45,6 @@ class ProjectsGroupsRequest extends FormRequest
                 // TODO сделать настройку для админа по количеству групп на пользователя, может быть в зависимости от тарифа
             ],
             'user_id' => 'required|min:1|max:30',
-
         ];
     }
 }

@@ -40,7 +40,13 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::get('user_ads/{user_id}', [AdAvitoApiController::class, 'getProjectAds']);
 
 // роуты проектов
-    Route::get('projects', [PC::class, 'getProjects']);
+    Route::group(['prefix' => 'projects'], function () {
+        Route::get('/', [PC::class, 'index']);
+        Route::post('add', [PC::class, 'store']);
+        Route::get('get/{id}', [PC::class, 'show']);
+        Route::get('update/{id}', [PC::class, 'update']);
+        Route::get('delete/{id}', [PC::class, 'destroy']);
+    });
 
 // роуты групп проектов
     Route::group(['prefix' => 'groupsprojects'], function () {
