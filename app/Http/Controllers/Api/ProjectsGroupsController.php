@@ -75,8 +75,7 @@ class ProjectsGroupsController extends Controller
     {
         $input = $request->all();
         $projectgroup = GroupsProjects::find($input['id']);
-        $projectgroup->name = $input['name'];
-        $projectgroup->save();
+        $projectgroup->fill($request->all())->save();
         return response()->json([
             "success" => true,
             "message" => "Группа проектов обновлена успешно.",

@@ -8,6 +8,7 @@ use App\Models\GroupsProjects;
 use App\Models\ProjectAvito;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectAvitoApiController extends Controller{
 
@@ -18,11 +19,11 @@ class ProjectAvitoApiController extends Controller{
      */
     public function index(): \Illuminate\Http\JsonResponse
     {
-        $projects = ProjectAvito::all();
+        $projects = ProjectAvito::where('user_id', Auth::id())->get();
         return response()->json([
             "success" => true,
             "message" => "Проекты успешно загружены.",
-            "projectsgroups" => $projects
+            "projects" => $projects
         ]);
     }
 
@@ -52,18 +53,13 @@ class ProjectAvitoApiController extends Controller{
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id): \Illuminate\Http\JsonResponse
+    public function show(Request $request, projectRequest $req): \Illuminate\Http\JsonResponse
     {
-        $project = ProjectAvito::find($id);
-        if (is_null($project)) {
-            return response()->json([
-                "success" => false,
-                "message" => "Проект не найден."
-            ]);
-        }
+        $input = $request->all();
+        $project = ProjectAvito::find($input['id']);
         return response()->json([
             "success" => true,
-            "message" => "Группа проектов успешно найдена.",
+            "message" => "Проект успешно найден.",
             "data" => $project
         ]);
     }
@@ -75,13 +71,11 @@ class ProjectAvitoApiController extends Controller{
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id, projectRequest $req): \Illuminate\Http\JsonResponse
+    public function update(Request $request, projectRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $project = ProjectAvito::find($id);
-        $project->name = $input['name'];
-        $project->user_id = $input['user_id'];
-        $project->save();
+        $project = ProjectAvito::find($input['id']);
+        $project->fill(request()->all())->save();
         return response()->json([
             "success" => true,
             "message" => "Проект обновлен успешно."
@@ -94,13 +88,14 @@ class ProjectAvitoApiController extends Controller{
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id): \Illuminate\Http\JsonResponse
+    public function destroy(Request $request, projectRequest $req): \Illuminate\Http\JsonResponse
     {
-        $project = ProjectAvito::find($id);
+        $input = $request->all();
+        $project = ProjectAvito::find($input['id']);
         $project->delete();
         return response()->json([
             "success" => true,
-            "message" => "Группа проектов успешно удалена."
+            "message" => "Проект успешно удален."
         ]);
     }
 }

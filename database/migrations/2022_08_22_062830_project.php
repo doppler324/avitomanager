@@ -18,6 +18,7 @@ return new class extends Migration
         $table->string('name');
         $table->string('client_id');
         $table->string('client_secret');
+        $table->bigInteger('user_id');
         $table->bigInteger('balance')->nullable();
         $table->string('profile_url')->nullable();
         $table->string('email')->nullable();

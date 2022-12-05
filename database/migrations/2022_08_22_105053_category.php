@@ -16,7 +16,6 @@ return new class extends Migration
     Schema::create('categories', function (Blueprint $table) {
       $table->bigIncrements('id');
       $table->string('name');
-      $table->string('avito_id');
       $table->string('parent_category_id');
       $table->integer('depth_level');
     });

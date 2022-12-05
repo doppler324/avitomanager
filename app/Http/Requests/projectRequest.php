@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\GroupsProjects;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,15 +25,27 @@ class projectRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => [
-                'required',
-                'min:3',
-                'max:30'
-            ],
-            'user_id' => 'required|min:1|max:30',
-            'client_id' => 'required|min:1|max:30',
-            'client_secret' => 'required|min:1|max:50',
-        ];
+        switch ($this->method()) {
+            case 'GET':
+            case 'PUT':
+            case 'PATCH':
+            case 'DELETE':
+            {
+                return [
+                    'id' => 'required|exists:projects,id'
+                ];
+            }
+            case 'POST':
+            {
+                return [
+                    'name'=> 'required|min:3',
+                    'user_id' => 'required|min:1|max:30',
+                    'client_id' => 'required|min:1|max:30',
+                    'client_secret' => 'required|min:1|max:50',
+                ];
+            }
+            default:
+                break;
+        }
     }
 }

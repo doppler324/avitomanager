@@ -9,7 +9,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class ProjectAvito extends Model
 {
-  use HasApiTokens, HasFactory, Notifiable;
+  use HasFactory;
   public $timestamps = false;
   protected $table = 'projects';
   /**
@@ -26,6 +26,7 @@ class ProjectAvito extends Model
     'profile_url',
     'email',
     'phone',
+    'user_id',
     'status'
   ];
 }

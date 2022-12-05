@@ -39,11 +39,20 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::get('ads', [AdAvitoApiController::class, 'getAds']);
     Route::get('user_ads/{user_id}', [AdAvitoApiController::class, 'getProjectAds']);
 
+// роуты rfntujhbq
+    Route::group(['prefix' => 'categories'], function () {
+        Route::get('/', [PC::class, 'index']);
+        Route::post('add', [PC::class, 'store']);
+        Route::get('get', [PC::class, 'show']);
+        Route::patch('update', [PC::class, 'update']);
+        Route::delete('delete', [PC::class, 'destroy']);
+    });
+
 // роуты проектов
     Route::group(['prefix' => 'projects'], function () {
         Route::get('/', [PC::class, 'index']);
         Route::post('add', [PC::class, 'store']);
-        Route::get('get/{id}', [PC::class, 'show']);
+        Route::get('get', [PC::class, 'show']);
         Route::patch('update', [PC::class, 'update']);
         Route::delete('delete', [PC::class, 'destroy']);
     });
