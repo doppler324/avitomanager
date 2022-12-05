@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\GroupsProjects;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\ProjectsGroupsRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectsGroupsController extends Controller
 {
@@ -18,7 +18,7 @@ class ProjectsGroupsController extends Controller
      */
     public function index(): \Illuminate\Http\JsonResponse
     {
-        $projectsgroups = GroupsProjects::where('user_id', Auth::id())->get();
+        $projectsgroups = GroupsProjects::all();
         return response()->json([
             "success" => true,
             "message" => "Список групп проектов успешно загружен.",
@@ -34,13 +34,15 @@ class ProjectsGroupsController extends Controller
      */
     public function store(Request $request, ProjectsGroupsRequest $req): \Illuminate\Http\JsonResponse
     {
-
+        // получаем данные из запроса
         $input = $request->all();
-        $projectgroup = GroupsProjects::create($input);
+        // добавляем группу, если меньше 10 групп
+        $groupProject = new GroupsProjects($input);
+        $groupProject->save();
+
         return response()->json([
             "success" => true,
-            "message" => "Группа проектов добавлена успешно.",
-            "data" => $projectgroup
+            "message" => "Группа проектов добавлена успешно."
         ]);
     }
 
@@ -54,11 +56,14 @@ class ProjectsGroupsController extends Controller
     {
         $projectgroup = GroupsProjects::find($id);
         if (is_null($projectgroup)) {
-            return $this->sendError('Product not found.');
+            return response()->json([
+                "success" => false,
+                "message" => "Группа проектов не найдена."
+            ]);
         }
         return response()->json([
             "success" => true,
-            "message" => "Группа проектов ууспешно найдена.",
+            "message" => "Группа проектов успешно найдена.",
             "data" => $projectgroup
         ]);
     }
@@ -70,11 +75,19 @@ class ProjectsGroupsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id, ProjectsGroupsRequest $req): \Illuminate\Http\JsonResponse
+    public function update(Request $request, $id): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
+        $validator = Validator::make($input, [
+            'name' => 'required',
+            'user_id' => 'required'
+        ]);
+        if($validator->fails()){
+            return $this->sendError('Ошибка валидации.', $validator->errors());
+        }
         $projectgroup = GroupsProjects::find($id);
         $projectgroup->name = $input['name'];
+        $projectgroup->user_id = $input['user_id'];
         $projectgroup->save();
         return response()->json([
             "success" => true,
