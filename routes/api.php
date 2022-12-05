@@ -44,17 +44,17 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
         Route::get('/', [PC::class, 'index']);
         Route::post('add', [PC::class, 'store']);
         Route::get('get/{id}', [PC::class, 'show']);
-        Route::get('update/{id}', [PC::class, 'update']);
-        Route::get('delete/{id}', [PC::class, 'destroy']);
+        Route::patch('update', [PC::class, 'update']);
+        Route::delete('delete', [PC::class, 'destroy']);
     });
 
 // роуты групп проектов
     Route::group(['prefix' => 'groupsprojects'], function () {
         Route::get('/', [ProjectsGroupsController::class, 'index']);
-        Route::get('add', [ProjectsGroupsController::class, 'store']);
-        Route::get('get/{id}', [ProjectsGroupsController::class, 'show']);
-        Route::get('update/{id}', [ProjectsGroupsController::class, 'update']);
-        Route::get('delete/{id}', [ProjectsGroupsController::class, 'destroy']);
+        Route::post('add', [ProjectsGroupsController::class, 'store']);
+        Route::get('get', [ProjectsGroupsController::class, 'show']);
+        Route::patch('update', [ProjectsGroupsController::class, 'update']);
+        Route::delete('delete', [ProjectsGroupsController::class, 'destroy']);
     });
 });
 

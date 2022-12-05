@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\projectsGroupsUpdateRequest;
 use App\Models\GroupsProjects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\ProjectsGroupsRequest;
+use App\Http\Requests\ProjectsGroupsStoreRequest;
 use Illuminate\Support\Facades\Auth;
 
 class ProjectsGroupsController extends Controller
@@ -18,7 +19,7 @@ class ProjectsGroupsController extends Controller
      */
     public function index(): \Illuminate\Http\JsonResponse
     {
-        $projectsgroups = GroupsProjects::all();
+        $projectsgroups = GroupsProjects::where('user_id', Auth::id())->get();
         return response()->json([
             "success" => true,
             "message" => "Список групп проектов успешно загружен.",
@@ -32,7 +33,7 @@ class ProjectsGroupsController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request, ProjectsGroupsRequest $req): \Illuminate\Http\JsonResponse
+    public function store(Request $request, ProjectsGroupsStoreRequest $req): \Illuminate\Http\JsonResponse
     {
         // получаем данные из запроса
         $input = $request->all();
@@ -52,15 +53,10 @@ class ProjectsGroupsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id): \Illuminate\Http\JsonResponse
+    public function show(Request $request, ProjectsGroupsStoreRequest $req): \Illuminate\Http\JsonResponse
     {
-        $projectgroup = GroupsProjects::find($id);
-        if (is_null($projectgroup)) {
-            return response()->json([
-                "success" => false,
-                "message" => "Группа проектов не найдена."
-            ]);
-        }
+        $input = $request->all();
+        $projectgroup = GroupsProjects::find($input['id']);
         return response()->json([
             "success" => true,
             "message" => "Группа проектов успешно найдена.",
@@ -75,19 +71,11 @@ class ProjectsGroupsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id): \Illuminate\Http\JsonResponse
+    public function update(Request $request, ProjectsGroupsStoreRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required',
-            'user_id' => 'required'
-        ]);
-        if($validator->fails()){
-            return $this->sendError('Ошибка валидации.', $validator->errors());
-        }
-        $projectgroup = GroupsProjects::find($id);
+        $projectgroup = GroupsProjects::find($input['id']);
         $projectgroup->name = $input['name'];
-        $projectgroup->user_id = $input['user_id'];
         $projectgroup->save();
         return response()->json([
             "success" => true,
@@ -102,14 +90,14 @@ class ProjectsGroupsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id): \Illuminate\Http\JsonResponse
+    public function destroy(Request $request, ProjectsGroupsStoreRequest $req): \Illuminate\Http\JsonResponse
     {
-        $projectgroup = GroupsProjects::find($id);
+        $input = $request->all();
+        $projectgroup = GroupsProjects::find($input['id']);
         $projectgroup->delete();
         return response()->json([
             "success" => true,
-            "message" => "Группа проектов успешно удалена.",
-            "data" => $projectgroup
+            "message" => "Группа проектов успешно удалена."
         ]);
     }
 }
