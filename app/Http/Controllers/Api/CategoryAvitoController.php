@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\projectRequest;
+use App\Http\Requests\categoryRequest;
 use App\Models\CategoryAvito;
 use App\Jobs\JobAvitoAdsDownloading;
-use App\Models\ProjectAvito;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,10 +18,10 @@ class CategoryAvitoController extends Controller
      */
     public function index(): \Illuminate\Http\JsonResponse
     {
-        $projects = CategoryAvito::where('user_id', Auth::id())->get();
+        $projects = CategoryAvito::all();
         return response()->json([
             "success" => true,
-            "message" => "Проекты успешно загружены.",
+            "message" => "Категории успешно загружены.",
             "projects" => $projects
         ]);
     }
@@ -33,17 +32,14 @@ class CategoryAvitoController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request, projectRequest $req): \Illuminate\Http\JsonResponse
+    public function store(Request $request, categoryRequest $req): \Illuminate\Http\JsonResponse
     {
-        // получаем данные из запроса
         $input = $request->all();
-        // добавляем проект
         $project = new CategoryAvito($input);
         $project->save();
-
         return response()->json([
             "success" => true,
-            "message" => "Проект добавлен успешно."
+            "message" => "Категория добавлена успешно."
         ]);
     }
 
@@ -53,13 +49,13 @@ class CategoryAvitoController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Request $request, projectRequest $req): \Illuminate\Http\JsonResponse
+    public function show(Request $request, categoryRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
         $project = CategoryAvito::find($input['id']);
         return response()->json([
             "success" => true,
-            "message" => "Проект успешно найден.",
+            "message" => "Категория успешно найдена.",
             "data" => $project
         ]);
     }
@@ -71,14 +67,14 @@ class CategoryAvitoController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, projectRequest $req): \Illuminate\Http\JsonResponse
+    public function update(Request $request, categoryRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
         $project = CategoryAvito::find($input['id']);
         $project->fill(request()->all())->save();
         return response()->json([
             "success" => true,
-            "message" => "Проект обновлен успешно."
+            "message" => "Категория обновлена успешно."
         ]);
     }
 
@@ -88,14 +84,14 @@ class CategoryAvitoController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request, projectRequest $req): \Illuminate\Http\JsonResponse
+    public function destroy(Request $request, categoryRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
         $project = CategoryAvito::find($input['id']);
         $project->delete();
         return response()->json([
             "success" => true,
-            "message" => "Проект успешно удален."
+            "message" => "Категория успешно удалена."
         ]);
     }
 }

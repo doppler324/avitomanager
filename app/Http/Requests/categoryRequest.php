@@ -37,7 +37,8 @@ class categoryRequest extends FormRequest
             {
                 return [
                     'name'=> 'required|min:3',
-                    'parent_category_id' => 'required|min:1|max:30',
+                    'avito_parent_id' => 'required|min:1|max:30',
+                    'avito_id' => 'required|min:1|max:30',
                     'depth_level' => 'required|min:1|max:10',
                 ];
             }

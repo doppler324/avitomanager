@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserApiController;
 use App\Http\Controllers\Api\AdAvitoApiController;
 use App\Http\Controllers\Api\ProjectsGroupsController;
+use App\Http\Controllers\Api\CategoryAvitoController;
 use App\Http\Controllers\AuthController;
 
 /*
@@ -39,13 +40,13 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::get('ads', [AdAvitoApiController::class, 'getAds']);
     Route::get('user_ads/{user_id}', [AdAvitoApiController::class, 'getProjectAds']);
 
-// роуты rfntujhbq
+// роуты категорий
     Route::group(['prefix' => 'categories'], function () {
-        Route::get('/', [PC::class, 'index']);
-        Route::post('add', [PC::class, 'store']);
-        Route::get('get', [PC::class, 'show']);
-        Route::patch('update', [PC::class, 'update']);
-        Route::delete('delete', [PC::class, 'destroy']);
+        Route::get('/', [CategoryAvitoController::class, 'index']);
+        Route::post('add', [CategoryAvitoController::class, 'store']);
+        Route::get('get', [CategoryAvitoController::class, 'show']);
+        Route::patch('update', [CategoryAvitoController::class, 'update']);
+        Route::delete('delete', [CategoryAvitoController::class, 'destroy']);
     });
 
 // роуты проектов

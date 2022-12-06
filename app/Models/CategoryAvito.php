@@ -7,15 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class CategoryAvito extends Model
 {
-  use HasFactory;
+    use HasFactory;
 
-  public $timestamps = false;
-  public $table = 'categories';
+    public $timestamps = false;
+    public $table = 'categories';
 
-  protected $fillable = [
-    'id',
-    'name',
-    'parent_category_id',
-    'depth_level'
-  ];
+    protected $fillable = [
+        'id',
+        'name',
+        'avito_id',
+        'avito_parent_id',
+        'depth_level'
+    ];
 }
