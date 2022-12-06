@@ -21,8 +21,7 @@ return new class extends Migration
             $table->string("title");
             $table->string("url");
             $table->string("category_id");
-            $table->string("projectavito_id");
-            $table->string("category_name");
+            $table->string("project_id");
         });
     }
 

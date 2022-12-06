@@ -18,11 +18,11 @@ class CategoryAvitoController extends Controller
      */
     public function index(): \Illuminate\Http\JsonResponse
     {
-        $projects = CategoryAvito::all();
+        $categories = CategoryAvito::all();
         return response()->json([
             "success" => true,
             "message" => "Категории успешно загружены.",
-            "projects" => $projects
+            "data" => $categories
         ]);
     }
 
@@ -35,8 +35,8 @@ class CategoryAvitoController extends Controller
     public function store(Request $request, categoryRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $project = new CategoryAvito($input);
-        $project->save();
+        $category = new CategoryAvito($input);
+        $category->save();
         return response()->json([
             "success" => true,
             "message" => "Категория добавлена успешно."
@@ -52,11 +52,11 @@ class CategoryAvitoController extends Controller
     public function show(Request $request, categoryRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $project = CategoryAvito::find($input['id']);
+        $category = CategoryAvito::find($input['id']);
         return response()->json([
             "success" => true,
             "message" => "Категория успешно найдена.",
-            "data" => $project
+            "data" => $category
         ]);
     }
 
@@ -70,8 +70,8 @@ class CategoryAvitoController extends Controller
     public function update(Request $request, categoryRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $project = CategoryAvito::find($input['id']);
-        $project->fill(request()->all())->save();
+        $category = CategoryAvito::find($input['id']);
+        $category->fill(request()->all())->save();
         return response()->json([
             "success" => true,
             "message" => "Категория обновлена успешно."
@@ -87,8 +87,8 @@ class CategoryAvitoController extends Controller
     public function destroy(Request $request, categoryRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $project = CategoryAvito::find($input['id']);
-        $project->delete();
+        $category = CategoryAvito::find($input['id']);
+        $category->delete();
         return response()->json([
             "success" => true,
             "message" => "Категория успешно удалена."

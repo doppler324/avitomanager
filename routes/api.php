@@ -36,9 +36,13 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::get('users', [UserApiController::class, 'getUsers']);
 
 // роуты по объявлениям
-    Route::get('ad/{id}', [AdAvitoApiController::class, 'getAd']);
-    Route::get('ads', [AdAvitoApiController::class, 'getAds']);
-    Route::get('user_ads/{user_id}', [AdAvitoApiController::class, 'getProjectAds']);
+    Route::group(['prefix' => 'ads'], function () {
+        Route::get('/', [AdAvitoApiController::class, 'index']);
+        Route::post('add', [AdAvitoApiController::class, 'store']);
+        Route::get('get', [AdAvitoApiController::class, 'show']);
+        Route::patch('update', [AdAvitoApiController::class, 'update']);
+        Route::delete('delete', [AdAvitoApiController::class, 'destroy']);
+    });
 
 // роуты категорий
     Route::group(['prefix' => 'categories'], function () {
