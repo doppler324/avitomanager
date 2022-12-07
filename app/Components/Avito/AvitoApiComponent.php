@@ -12,7 +12,6 @@ class AvitoApiComponent
 {
     // Текущий проект
     protected ?ProjectAvito $project = null;
-    protected ?Encrypter $encrypter = null;
 
     function __construct(ProjectAvito $project)
     {
@@ -32,12 +31,11 @@ class AvitoApiComponent
     {
         try {
             $response = Http::asForm()->post('https://api.avito.ru/token', [
-                'client_id' => $this->project->client_id,
-                'client_secret' => $this->project->client_secret,
+                'client_id' => $this->project->getClientIdAttribute(),
+                'client_secret' => $this->project->getClientSecretAttribute(),
                 'grant_type' => 'client_credentials',
             ])->throw()->json();
-            $encrypter = new Encrypter('1234567812345678', 'AES-128-CBC');
-            $this->project->access_token = $this->encrypter->encrypt($response['access_token']);unset($encrypter);
+            $this->project->setAccessTokenAttribute($response['access_token']);
             $this->project->access_token_time = now();
             $this->project->save();
         } catch (Exception $ex) {

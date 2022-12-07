@@ -6,6 +6,7 @@ namespace App\Console\Commands;
 use App\Components\Avito\AvitoApiComponent;
 use App\Models\ProjectAvito;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class AvitoRequest extends Command
 {
@@ -31,7 +32,9 @@ class AvitoRequest extends Command
     public function handle()
     {
         $project = ProjectAvito::all()->first();
-        $aac = new AvitoApiComponent($project);
-        print_r($aac->loadInfoProject());
+        $this->info(print_r($project->getClientIdAttribute(), true));
+        //$aac = new AvitoApiComponent($project);
+
+        //$aac->loadInfoProject();
     }
 }

@@ -66,10 +66,54 @@ class ProjectAvito extends Model
     public function getAccessTokenAttribute()
     {
         $myEncrypter = new Encrypter('1234567812345678', 'AES-128-CBC');
-        Text::with(['author'=>function($q){
-            $q->makeVisible('name');
-        }])->get();
-        return $this->makeVisible(['access_token']);
-       // return "{$myEncrypter->decrypt($this->makeVisible(['access_token']))}";
+       return "{$myEncrypter->decrypt($this->makeVisible(['access_token']))}";
+    }
+
+    /**
+     * Установить client_id Авито.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setClientIdAttribute($value)
+    {
+        $myEncrypter = new Encrypter('1234567812345678', 'AES-128-CBC');
+        $this->attributes['client_id'] = $myEncrypter->encrypt($value);
+    }
+
+    /**
+     * Получить client_id Авито.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getClientIdAttribute()
+    {
+        $myEncrypter = new Encrypter('1234567812345678', 'AES-128-CBC');
+        return "{$myEncrypter->decrypt($this->makeVisible(['client_id']))}";
+    }
+
+    /**
+     * Установить client_secret Авито.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setClientSecretAttribute($value)
+    {
+        $myEncrypter = new Encrypter('1234567812345678', 'AES-128-CBC');
+        $this->attributes['client_secret'] = $myEncrypter->encrypt($value);
+    }
+
+    /**
+     * Получить client_secret Авито.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getClientSecretAttribute()
+    {
+        $myEncrypter = new Encrypter('1234567812345678', 'AES-128-CBC');
+        return "{$myEncrypter->decrypt($this->makeVisible(['client_secret']))}";
     }
 }

@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Components\Avito\AvitoApiComponent;
 
-class ProjectController extends Controller{
+class ProjectController extends Controller
+{
 
     /**
      * Отображает список проектов.
@@ -37,7 +38,6 @@ class ProjectController extends Controller{
         $input = $request->all();
         $project = new ProjectAvito($input);
         $project->save();
-
         return response()->json([
             "success" => true,
             "message" => "Проект добавлен успешно."
@@ -57,7 +57,7 @@ class ProjectController extends Controller{
         return response()->json([
             "success" => true,
             "message" => "Проект успешно найден.",
-            "data" => $project
+            "data" =>  $project->getClientIdAttribute()
         ]);
     }
 
@@ -72,11 +72,10 @@ class ProjectController extends Controller{
     {
         $input = $request->all();
         $project = ProjectAvito::find($input['id']);
-        $project->fill(request()->all())->save();
+        $project->forceFill(request()->all())->save();
         return response()->json([
             "success" => true,
-            "message" => "Проект обновлен успешно.",
-            "request" => request()->all()
+            "message" => "Проект обновлен успешно."
         ]);
     }
 
@@ -116,7 +115,4 @@ class ProjectController extends Controller{
             "message" => "Проект успешно удален."
         ]);
     }
-
-
-
 }
