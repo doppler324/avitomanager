@@ -32,9 +32,8 @@ class AvitoRequest extends Command
     public function handle()
     {
         $project = ProjectAvito::all()->first();
-        $this->info(print_r($project->getClientIdAttribute(), true));
-        //$aac = new AvitoApiComponent($project);
-
+        $aac = new AvitoApiComponent($project);
+        //print_r($aac);
         //$aac->loadInfoProject();
     }
 }

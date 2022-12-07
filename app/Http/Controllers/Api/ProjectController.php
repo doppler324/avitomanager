@@ -47,17 +47,16 @@ class ProjectController extends Controller
     /**
      * Отображает определенный проект.
      *
-     * @param int $id
+     * @param Request $request
+     * @param projectRequest $req
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(Request $request, projectRequest $req): \Illuminate\Http\JsonResponse
     {
-        $input = $request->all();
-        $project = ProjectAvito::find($input['id']);
+        $project = ProjectAvito::find($request->id);
         return response()->json([
             "success" => true,
-            "message" => "Проект успешно найден.",
-            "data" =>  $project->getClientIdAttribute()
+            "message" => "Проект успешно найден."
         ]);
     }
 

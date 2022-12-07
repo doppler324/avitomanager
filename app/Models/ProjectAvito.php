@@ -47,32 +47,31 @@ class ProjectAvito extends Model
     /**
      * Установить access_token Авито.
      *
-     * @param  string  $value
+     * @param string $value
      * @return void
      */
     public function setAccessTokenAttribute($value)
     {
         $myEncrypter = new Encrypter('1234567812345678', 'AES-128-CBC');
         $this->attributes['access_token'] = $myEncrypter->encrypt($value);
-        unset($myEncrypter);
     }
 
     /**
      * Получить access_token Авито.
      *
-     * @param  string  $value
+     * @param string $value
      * @return string
      */
     public function getAccessTokenAttribute()
     {
         $myEncrypter = new Encrypter('1234567812345678', 'AES-128-CBC');
-       return "{$myEncrypter->decrypt($this->makeVisible(['access_token']))}";
+        return $myEncrypter->decrypt($this->attributes['access_token']);
     }
 
     /**
      * Установить client_id Авито.
      *
-     * @param  string  $value
+     * @param string $value
      * @return void
      */
     public function setClientIdAttribute($value)
@@ -84,19 +83,18 @@ class ProjectAvito extends Model
     /**
      * Получить client_id Авито.
      *
-     * @param  string  $value
      * @return string
      */
     public function getClientIdAttribute()
     {
         $myEncrypter = new Encrypter('1234567812345678', 'AES-128-CBC');
-        return "{$myEncrypter->decrypt($this->makeVisible(['client_id']))}";
+        return $myEncrypter->decrypt($this->attributes['client_id']);
     }
 
     /**
      * Установить client_secret Авито.
      *
-     * @param  string  $value
+     * @param string $value
      * @return void
      */
     public function setClientSecretAttribute($value)
@@ -108,12 +106,12 @@ class ProjectAvito extends Model
     /**
      * Получить client_secret Авито.
      *
-     * @param  string  $value
+     * @param string $value
      * @return string
      */
     public function getClientSecretAttribute()
     {
         $myEncrypter = new Encrypter('1234567812345678', 'AES-128-CBC');
-        return "{$myEncrypter->decrypt($this->makeVisible(['client_secret']))}";
+        return $myEncrypter->decrypt($this->attributes['client_secret']);
     }
 }

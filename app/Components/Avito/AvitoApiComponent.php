@@ -31,11 +31,12 @@ class AvitoApiComponent
     {
         try {
             $response = Http::asForm()->post('https://api.avito.ru/token', [
-                'client_id' => $this->project->getClientIdAttribute(),
-                'client_secret' => $this->project->getClientSecretAttribute(),
+                'client_id' => $this->project->client_id,
+                'client_secret' => $this->project->client_secret,
                 'grant_type' => 'client_credentials',
             ])->throw()->json();
-            $this->project->setAccessTokenAttribute($response['access_token']);
+            die('sdfsdf');
+            //$this->project->access_token = $response['access_token'];
             $this->project->access_token_time = now();
             $this->project->save();
         } catch (Exception $ex) {
@@ -49,7 +50,8 @@ class AvitoApiComponent
      */
     public function checkAccessToken(): bool
     {
-        if ($this->project->getAccessTokenAttribute() && now()->diffInSeconds($this->project->access_token_time) > 3600) {
+        if (($this->project->access_token && now()->diffInSeconds($this->project->access_token_time) > 3600) || !$this->project->access_token || !$this->project->access_token_time) {
+
             return !(self::setAccessToken() != 200);
         }
         return true;
