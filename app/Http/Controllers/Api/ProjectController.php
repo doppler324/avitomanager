@@ -4,16 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\projectRequest;
-use App\Models\GroupsProjects;
 use App\Models\ProjectAvito;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use App\Components\Avito\AvitoApiComponent;
 
-class ProjectAvitoApiController extends Controller{
+class ProjectController extends Controller{
 
     /**
-     * Display a listing of the resource.
+     * Отображает список проектов.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -28,16 +27,14 @@ class ProjectAvitoApiController extends Controller{
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Добавляет проект.
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request, projectRequest $req): \Illuminate\Http\JsonResponse
     {
-        // получаем данные из запроса
         $input = $request->all();
-        // добавляем проект
         $project = new ProjectAvito($input);
         $project->save();
 
@@ -48,7 +45,7 @@ class ProjectAvitoApiController extends Controller{
     }
 
     /**
-     * Display the specified resource.
+     * Отображает определенный проект.
      *
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
@@ -65,7 +62,7 @@ class ProjectAvitoApiController extends Controller{
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновляет проект.
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
@@ -76,6 +73,27 @@ class ProjectAvitoApiController extends Controller{
         $input = $request->all();
         $project = ProjectAvito::find($input['id']);
         $project->fill(request()->all())->save();
+        return response()->json([
+            "success" => true,
+            "message" => "Проект обновлен успешно.",
+            "request" => request()->all()
+        ]);
+    }
+
+    /**
+     * Обновляет проект с Авито.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateWithAvito(Request $request, projectRequest $req): \Illuminate\Http\JsonResponse
+    {
+        $id = $request->get('id');
+        $project = ProjectAvito::find($id);
+        $avito = new AvitoApiComponent($project);
+        $dataProjectFromAvito = $avito->loadInfoProject();
+        $project->fill($dataProjectFromAvito)->save();
         return response()->json([
             "success" => true,
             "message" => "Проект обновлен успешно."
@@ -98,4 +116,7 @@ class ProjectAvitoApiController extends Controller{
             "message" => "Проект успешно удален."
         ]);
     }
+
+
+
 }

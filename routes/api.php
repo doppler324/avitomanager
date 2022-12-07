@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\ProjectAvitoApiController as PC;
+use App\Http\Controllers\Api\ProjectController as PC;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserApiController;

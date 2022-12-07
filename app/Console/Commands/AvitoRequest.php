@@ -3,11 +3,9 @@
 namespace App\Console\Commands;
 
 
+use App\Components\Avito\AvitoApiComponent;
+use App\Models\ProjectAvito;
 use Illuminate\Console\Command;
-use App\Components\AvitoApiComponent;
-use App\Http\Controllers\Api\CategoryAvitoController;
-use App\Models\User;
-use App\Models\AdAvito;
 
 class AvitoRequest extends Command
 {
@@ -32,7 +30,8 @@ class AvitoRequest extends Command
      */
     public function handle()
     {
-      $aac = new AvitoApiComponent();
-      $aac->loadAds();
+        $project = ProjectAvito::all()->first();
+        $aac = new AvitoApiComponent($project);
+        print_r($aac->loadInfoProject());
     }
 }

@@ -2,13 +2,12 @@
 
 namespace App\Jobs;
 
-use App\Models\CategoryAvito;
+use App\Components\Avito\AvitoApiComponent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Components\AvitoApiComponent;
 
 class JobAvitoAdsDownloading implements ShouldQueue
 {

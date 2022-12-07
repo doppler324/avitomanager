@@ -24,6 +24,9 @@ return new class extends Migration
         $table->string('email')->nullable();
         $table->string('phone')->nullable();
         $table->string('status')->nullable();
+        $table->string('access_token')->nullable();
+        $table->string('profile_id')->nullable();
+        $table->timestamp('access_token_time')->nullable();
       });
     }
 
