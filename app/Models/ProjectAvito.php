@@ -12,7 +12,6 @@ class ProjectAvito extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
     protected $table = 'projects';
 
     /**
@@ -24,12 +23,15 @@ class ProjectAvito extends Model
         'id',
         'name',
         'balance',
+        'bonus_balance',
         'profile_url',
         'email',
         'phone',
         'user_id',
         'status',
-        'profile_id'
+        'profile_id',
+        'created_at',
+        'updated_at'
     ];
 
     /**
@@ -42,6 +44,8 @@ class ProjectAvito extends Model
         'access_token_time',
         'client_id',
         'client_secret',
+        'created_at',
+        'updated_at'
     ];
 
     /**
@@ -65,7 +69,7 @@ class ProjectAvito extends Model
     public function getAccessTokenAttribute()
     {
         $myEncrypter = new Encrypter('1234567812345678', 'AES-128-CBC');
-        return $myEncrypter->decrypt($this->attributes['access_token']);
+        return "{$myEncrypter->decrypt($this->attributes['access_token'])}";
     }
 
     /**

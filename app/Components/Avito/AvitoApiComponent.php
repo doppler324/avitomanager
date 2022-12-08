@@ -7,15 +7,16 @@ use App\Models\ProjectAvito;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Encryption\Encrypter;
+use PhpParser\Node\Expr\Array_;
 
 class AvitoApiComponent
 {
     // Текущий проект
-    protected ?ProjectAvito $project = null;
+    protected static ?ProjectAvito $project = null;
 
     function __construct(ProjectAvito $project)
     {
-        $this->project = $project;
+        static::$project = $project;
         try {
             self::checkAccessToken();
         } catch (Exception $ex) {
@@ -31,14 +32,13 @@ class AvitoApiComponent
     {
         try {
             $response = Http::asForm()->post('https://api.avito.ru/token', [
-                'client_id' => $this->project->client_id,
-                'client_secret' => $this->project->client_secret,
+                'client_id' => static::$project->client_id,
+                'client_secret' => static::$project->client_secret,
                 'grant_type' => 'client_credentials',
             ])->throw()->json();
-            die('sdfsdf');
-            //$this->project->access_token = $response['access_token'];
-            $this->project->access_token_time = now();
-            $this->project->save();
+            static::$project->access_token = $response['access_token'];
+            static::$project->access_token_time = now();
+            static::$project->save();
         } catch (Exception $ex) {
             return $ex->getCode();
         }
@@ -50,8 +50,7 @@ class AvitoApiComponent
      */
     public function checkAccessToken(): bool
     {
-        if (($this->project->access_token && now()->diffInSeconds($this->project->access_token_time) > 3600) || !$this->project->access_token || !$this->project->access_token_time) {
-
+        if (empty(static::$project->getAttributes()->access_token)) {
             return !(self::setAccessToken() != 200);
         }
         return true;
@@ -66,12 +65,14 @@ class AvitoApiComponent
         $result = array();
         try {
             do {
-                $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->project->getAccessTokenAttribute()])->get('https://api.avito.ru/core/v1/items', [
-                    'per_page' => 100,
-                    'page' => !empty($response['meta']['page']) ? $response['meta']['page'] + 1 : 1,
-                    'status' => "active,removed,old,blocked,rejected",
-                    'category' => $category == 0 ? "" : $category
-                ])->throw()->json();
+                $response =
+                    Http::withHeaders(['Authorization' => 'Bearer ' . $project->getAccessTokenAttribute()])
+                        ->get('https://api.avito.ru/core/v1/items', [
+                            'per_page' => 100,
+                            'page' => !empty($response['meta']['page']) ? $response['meta']['page'] + 1 : 1,
+                            'status' => "active,removed,old,blocked,rejected",
+                            'category' => $category == 0 ? "" : $category
+                        ])->throw()->json();
                 $result[!empty($response['meta']['page']) ? $response['meta']['page'] : 1] = $response['resources'];
                 sleep(1);
             } while (!empty($response['resources']));
@@ -92,10 +93,12 @@ class AvitoApiComponent
         $result = array();
         try {
             foreach (AdAvito::all()->chunk(1) as $item) {
-                $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->project->getAccessTokenAttribute()])
-                    ->get('https://api.avito.ru/core/v1/accounts/' . $this->project->avito_profiles_id . '/items/' . $item->id . '/')
-                    ->throw()
-                    ->json();
+                $response =
+                    Http::withHeaders(['Authorization' => 'Bearer ' . $this->project->getAccessTokenAttribute()])
+                        ->get('https://api.avito.ru/core/v1/accounts/' . $this->project->avito_profiles_id . '/items/' .
+                            $item->id . '/')
+                        ->throw()
+                        ->json();
                 $result[] = $response;
                 sleep(1);
             }
@@ -140,7 +143,8 @@ class AvitoApiComponent
         $result = array();
         try {
             foreach (AdAvito::all()->chunk(200) as $item) {
-                $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->project->getAccessTokenAttribute(), 'Content-Type' => 'application/json'])
+                $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->project->getAccessTokenAttribute(),
+                    'Content-Type' => 'application/json'])
                     ->post('https://api.avito.ru/stats/v1/accounts/' . $this->project->avito_profiles_id . '/items',
                         [
                             'dateFrom' => now()->subDays(270)->format('YYYY-MM-DD'),
@@ -171,7 +175,8 @@ class AvitoApiComponent
         $result = array();
         try {
             $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->project->getAccessTokenAttribute()])
-                ->post('https://api.avito.ru/core/v1/accounts/' . $this->project->avito_profiles_id . '/price/vas_packages',
+                ->post('https://api.avito.ru/core/v1/accounts/' . $this->project->avito_profiles_id .
+                    '/price/vas_packages',
                     [
                         'itemIds' => AdAvito::all()->get('id')->implode('id', ',')
                     ])
@@ -194,7 +199,8 @@ class AvitoApiComponent
     {
         $result = array();
         try {
-            $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->project->getAccessTokenAttribute(), 'Content-Type' => 'application/json'])
+            $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->project->getAccessTokenAttribute(),
+                'Content-Type' => 'application/json'])
                 ->post('https://api.avito.ru/core/v1/accounts/' . $this->project->avito_profiles_id . '/calls/stats/',
                     [
                         'itemIds' => AdAvito::all()->get('id')->implode('id', ',')
@@ -212,44 +218,72 @@ class AvitoApiComponent
 
     /**
      *  Получение баланса кошелька пользователя
+     * * @param string $id
      * @return mixed
      */
-    public function loadBalance()
+    public static function loadBalance($id): Array
     {
-        $result = array();
+        $project = ProjectAvito::find($id);
+        $response = "";
         try {
-            $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->project->getAccessTokenAttribute(), 'Content-Type' => 'application/json'])
-                ->get('https://api.avito.ru/core/v1/accounts/' . $this->project->avito_profiles_id . '/balance/')
-                ->throw()
+            $response = Http::withHeaders(['Authorization' => 'Bearer ' . $project->access_token,
+                'Content-Type' => 'application/json'])
+                ->get('https://api.avito.ru/core/v1/accounts/' . $project->profile_id . '/balance/')
+                ->throwIf(!empty($response["error"]))
                 ->json();
-            $result = $response["real"];
+            $project->fill([
+                "balance" => $response["real"],
+                "bonus_balance" => $response["bonus"],
+            ]);
+            $project->save();
         } catch (Exception $ex) {
             if ($ex->getCode() != 200) {
-                return $ex->getMessage();
+                return [
+                    "success" => false,
+                    "message" => $ex->getMessage(),
+                    "messageFromAvito" => $response['error']
+                ];
             }
         }
-        return $result;
+        return [
+            "success" => true
+        ];
     }
 
     /**
      *  Получение информации об авторизованном пользователе
      * @return mixed
      */
-    public function loadInfoProject()
+    public static function loadInfoProject($id) : Array
     {
-        $result = array();
+        $project = ProjectAvito::find($id);
+        $response = array();
         try {
-            $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->project->getAccessTokenAttribute(), 'Content-Type' => 'application/json'])
+            $response = Http::withHeaders(['Authorization' => 'Bearer ' . $project->access_token,
+                'Content-Type' => 'application/json'])
                 ->get('https://api.avito.ru/core/v1/accounts/self/')
-                ->throw()
+                ->throwIf(!empty($response["error"]))
                 ->json();
-            $result = $response;
-        } catch (Exception $ex) {
+            $project->fill([
+                "email" => $response["email"],
+                "name" => $response["name"],
+                "phone" => $response["phone"],
+                "profile_url" => $response["profile_url"],
+                "profile_id" => $response["id"],
+            ]);
+            $project->save();
+        }catch (Exception $ex) {
             if ($ex->getCode() != 200) {
-                return $ex->getMessage();
+                return [
+                    "success" => false,
+                    "message" => $ex->getMessage(),
+                    "messageFromAvito" => $response
+                ];
             }
         }
-        return $result;
+        return [
+            "success" => true
+        ];
     }
 
     /**
@@ -257,31 +291,31 @@ class AvitoApiComponent
      * @return mixed
      */
     public static function loadCategories()
-    {
+{
 
 
-        /*$link = "https://avito.ru";
-        // получаем страницу get-запросом
-        try {
-          $body = Http::get($link)->throw()->body();
-        }catch(Exception $ex){
-          return $ex->getMessage();
-        }
-        // создаём краулер для получения данных
-        $crawler = new Crawler(null, $link);
-        $crawler->addHtmlContent($body, 'UTF-8');
-        // Получение категорий
-        $categories = $crawler->filter('#category option')->each(
-          function ($node, $i) {
-            if($node->text() == 'Любая категория'){
-              return false;
-            }
-            $id = $node->attr('value');
-            $name = $node->text();
-            return array($id, $name);
-          }
-        );
-        unset($crawler);
-        return $categories;*/
+    /*$link = "https://avito.ru";
+    // получаем страницу get-запросом
+    try {
+      $body = Http::get($link)->throw()->body();
+    }catch(Exception $ex){
+      return $ex->getMessage();
     }
+    // создаём краулер для получения данных
+    $crawler = new Crawler(null, $link);
+    $crawler->addHtmlContent($body, 'UTF-8');
+    // Получение категорий
+    $categories = $crawler->filter('#category option')->each(
+      function ($node, $i) {
+        if($node->text() == 'Любая категория'){
+          return false;
+        }
+        $id = $node->attr('value');
+        $name = $node->text();
+        return array($id, $name);
+      }
+    );
+    unset($crawler);
+    return $categories;*/
+}
 }

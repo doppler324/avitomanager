@@ -33,7 +33,6 @@ class AvitoRequest extends Command
     {
         $project = ProjectAvito::all()->first();
         $aac = new AvitoApiComponent($project);
-        //print_r($aac);
-        //$aac->loadInfoProject();
+        print_r($aac->loadInfoProject());
     }
 }

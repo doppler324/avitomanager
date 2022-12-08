@@ -87,11 +87,16 @@ class ProjectController extends Controller
      */
     public function updateWithAvito(Request $request, projectRequest $req): \Illuminate\Http\JsonResponse
     {
-        $id = $request->get('id');
-        $project = ProjectAvito::find($id);
-        $avito = new AvitoApiComponent($project);
-        $dataProjectFromAvito = $avito->loadInfoProject();
-        $project->fill($dataProjectFromAvito)->save();
+        $input = $request->all();
+        $result["project"] = AvitoApiComponent::loadInfoProject($input['id']);
+        $result["balance"] = AvitoApiComponent::loadBalance($input['id']);
+        if($result["project"]["success"] === false || $result["balance"]["success"] === false){
+            return response()->json([
+                "success" => false,
+                "message" => ["project" => $result["project"]["message"], "balance" => $result["balance"]["message"]],
+                "messageFromAvito" => ["project" => $result["project"]["messageFromAvito"], "balance" => $result["balance"]["messageFromAvito"]]
+            ]);
+        }
         return response()->json([
             "success" => true,
             "message" => "Проект обновлен успешно."

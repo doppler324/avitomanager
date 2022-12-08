@@ -59,6 +59,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
         Route::post('add', [PC::class, 'store']);
         Route::get('get', [PC::class, 'show']);
         Route::patch('update', [PC::class, 'update']);
+        Route::patch('updatewithavito', [PC::class, 'updateWithAvito']);
         Route::delete('delete', [PC::class, 'destroy']);
     });
 
