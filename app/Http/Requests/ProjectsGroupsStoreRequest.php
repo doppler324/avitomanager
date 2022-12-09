@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\GroupsProjects;
+use App\Models\GroupsProjectsModel;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -42,13 +42,13 @@ class ProjectsGroupsStoreRequest extends FormRequest
                         'max:30',
                         // уникальное название группы для пользователя
                         function ($attribute, $value, $fail) {
-                            if (GroupsProjects::where('user_id', Auth::id())->where('name', $value)->exists()) {
+                            if (GroupsProjectsModel::where('user_id', Auth::id())->where('name', $value)->exists()) {
                                 $fail('Название группы существует');
                             }
                         },
                         // правило меньше 10 групп проектов на пользователя
                         function ($attribute, $value, $fail) {
-                            if (GroupsProjects::where('user_id', Auth::id())->count() >= 10) {
+                            if (GroupsProjectsModel::where('user_id', Auth::id())->count() >= 10) {
                                 $fail('Не больше 10 групп');
                             }
                         },

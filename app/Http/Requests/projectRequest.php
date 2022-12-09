@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\GroupsProjects;
+use App\Models\GroupsProjectsModel;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 

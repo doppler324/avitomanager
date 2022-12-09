@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\projectRequest;
-use App\Models\ProjectAvito;
+use App\Models\ProjectModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Components\Avito\AvitoApiComponent;
@@ -19,7 +19,7 @@ class ProjectController extends Controller
      */
     public function index(): \Illuminate\Http\JsonResponse
     {
-        $projects = ProjectAvito::where('user_id', Auth::id())->get();
+        $projects = ProjectModel::where('user_id', Auth::id())->get();
         return response()->json([
             "success" => true,
             "message" => "Проекты успешно загружены.",
@@ -36,7 +36,7 @@ class ProjectController extends Controller
     public function store(Request $request, projectRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $project = new ProjectAvito($input);
+        $project = new ProjectModel($input);
         $project->save();
         return response()->json([
             "success" => true,
@@ -53,7 +53,7 @@ class ProjectController extends Controller
      */
     public function show(Request $request, projectRequest $req): \Illuminate\Http\JsonResponse
     {
-        $project = ProjectAvito::find($request->id);
+        $project = ProjectModel::find($request->id);
         return response()->json([
             "success" => true,
             "message" => "Проект успешно найден."
@@ -70,7 +70,7 @@ class ProjectController extends Controller
     public function update(Request $request, projectRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $project = ProjectAvito::find($input['id']);
+        $project = ProjectModel::find($input['id']);
         $project->forceFill(request()->all())->save();
         return response()->json([
             "success" => true,
@@ -90,11 +90,24 @@ class ProjectController extends Controller
         $input = $request->all();
         $result["project"] = AvitoApiComponent::loadInfoProject($input['id']);
         $result["balance"] = AvitoApiComponent::loadBalance($input['id']);
-        if($result["project"]["success"] === false || $result["balance"]["success"] === false){
+        $result["ads"] = AvitoApiComponent::loadBalance($input['id']);
+        if(
+            $result["project"]["success"] === false
+            || $result["balance"]["success"] === false
+            || $result["ads"]["success"] === false
+        ){
             return response()->json([
                 "success" => false,
-                "message" => ["project" => $result["project"]["message"], "balance" => $result["balance"]["message"]],
-                "messageFromAvito" => ["project" => $result["project"]["messageFromAvito"], "balance" => $result["balance"]["messageFromAvito"]]
+                "message" => [
+                    "project" => $result["project"]["message"],
+                    "balance" => $result["balance"]["message"],
+                    "ads" => $result["ads"]["message"],
+                ],
+                "messageFromAvito" => [
+                    "project" => $result["project"]["messageFromAvito"],
+                    "balance" => $result["balance"]["messageFromAvito"],
+                    "ads" => $result["ads"]["messageFromAvito"],
+                ]
             ]);
         }
         return response()->json([
@@ -112,7 +125,7 @@ class ProjectController extends Controller
     public function destroy(Request $request, projectRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $project = ProjectAvito::find($input['id']);
+        $project = ProjectModel::find($input['id']);
         $project->delete();
         return response()->json([
             "success" => true,

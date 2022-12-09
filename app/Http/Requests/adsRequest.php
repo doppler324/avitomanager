@@ -30,7 +30,8 @@ class adsRequest extends FormRequest
             case 'DELETE':
             {
                 return [
-                    'id' => 'required|exists:ads,id'
+                    'id' => 'exists:ads,id',
+                    '$project_id' => 'exists:projects,id'
                 ];
             }
             case 'POST':

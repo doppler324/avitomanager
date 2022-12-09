@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\projectsGroupsUpdateRequest;
-use App\Models\GroupsProjects;
+use App\Models\GroupsProjectsModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\ProjectsGroupsStoreRequest;
@@ -19,7 +19,7 @@ class ProjectsGroupsController extends Controller
      */
     public function index(): \Illuminate\Http\JsonResponse
     {
-        $projectsgroups = GroupsProjects::where('user_id', Auth::id())->get();
+        $projectsgroups = GroupsProjectsModel::where('user_id', Auth::id())->get();
         return response()->json([
             "success" => true,
             "message" => "Список групп проектов успешно загружен.",
@@ -38,7 +38,7 @@ class ProjectsGroupsController extends Controller
         // получаем данные из запроса
         $input = $request->all();
         // добавляем группу, если меньше 10 групп
-        $groupProject = new GroupsProjects($input);
+        $groupProject = new GroupsProjectsModel($input);
         $groupProject->save();
 
         return response()->json([
@@ -56,7 +56,7 @@ class ProjectsGroupsController extends Controller
     public function show(Request $request, ProjectsGroupsStoreRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $projectgroup = GroupsProjects::find($input['id']);
+        $projectgroup = GroupsProjectsModel::find($input['id']);
         return response()->json([
             "success" => true,
             "message" => "Группа проектов успешно найдена.",
@@ -74,7 +74,7 @@ class ProjectsGroupsController extends Controller
     public function update(Request $request, ProjectsGroupsStoreRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $projectgroup = GroupsProjects::find($input['id']);
+        $projectgroup = GroupsProjectsModel::find($input['id']);
         $projectgroup->fill($request->all())->save();
         return response()->json([
             "success" => true,
@@ -92,7 +92,7 @@ class ProjectsGroupsController extends Controller
     public function destroy(Request $request, ProjectsGroupsStoreRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $projectgroup = GroupsProjects::find($input['id']);
+        $projectgroup = GroupsProjectsModel::find($input['id']);
         $projectgroup->delete();
         return response()->json([
             "success" => true,

@@ -8,7 +8,7 @@ use Illuminate\Encryption\Encrypter;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class ProjectAvito extends Model
+class ProjectModel extends Model
 {
     use HasFactory;
 

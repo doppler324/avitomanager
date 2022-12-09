@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\categoryRequest;
-use App\Models\CategoryAvito;
+use App\Models\CategoryModel;
 use App\Jobs\JobAvitoAdsDownloading;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CategoryAvitoController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class CategoryAvitoController extends Controller
      */
     public function index(): \Illuminate\Http\JsonResponse
     {
-        $categories = CategoryAvito::all();
+        $categories = CategoryModel::all();
         return response()->json([
             "success" => true,
             "message" => "Категории успешно загружены.",
@@ -35,7 +35,7 @@ class CategoryAvitoController extends Controller
     public function store(Request $request, categoryRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $category = new CategoryAvito($input);
+        $category = new CategoryModel($input);
         $category->save();
         return response()->json([
             "success" => true,
@@ -52,7 +52,7 @@ class CategoryAvitoController extends Controller
     public function show(Request $request, categoryRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $category = CategoryAvito::find($input['id']);
+        $category = CategoryModel::find($input['id']);
         return response()->json([
             "success" => true,
             "message" => "Категория успешно найдена.",
@@ -70,7 +70,7 @@ class CategoryAvitoController extends Controller
     public function update(Request $request, categoryRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $category = CategoryAvito::find($input['id']);
+        $category = CategoryModel::find($input['id']);
         $category->fill(request()->all())->save();
         return response()->json([
             "success" => true,
@@ -87,7 +87,7 @@ class CategoryAvitoController extends Controller
     public function destroy(Request $request, categoryRequest $req): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
-        $category = CategoryAvito::find($input['id']);
+        $category = CategoryModel::find($input['id']);
         $category->delete();
         return response()->json([
             "success" => true,

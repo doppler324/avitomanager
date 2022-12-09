@@ -3,10 +3,10 @@
 use App\Http\Controllers\Api\ProjectController as PC;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\UserApiController;
-use App\Http\Controllers\Api\AdAvitoApiController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\AdController;
 use App\Http\Controllers\Api\ProjectsGroupsController;
-use App\Http\Controllers\Api\CategoryAvitoController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\AuthController;
 
 /*
@@ -32,25 +32,24 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::group(['middleware' => 'auth:sanctum'], function() {
 // роуты по пользователю
-    Route::get('user/{id}', [UserApiController::class, 'getUser']);
-    Route::get('users', [UserApiController::class, 'getUsers']);
 
 // роуты по объявлениям
     Route::group(['prefix' => 'ads'], function () {
-        Route::get('/', [AdAvitoApiController::class, 'index']);
-        Route::post('add', [AdAvitoApiController::class, 'store']);
-        Route::get('get', [AdAvitoApiController::class, 'show']);
-        Route::patch('update', [AdAvitoApiController::class, 'update']);
-        Route::delete('delete', [AdAvitoApiController::class, 'destroy']);
+        Route::get('/', [AdController::class, 'index']);
+        Route::post('add', [AdController::class, 'store']);
+        Route::get('get', [AdController::class, 'show']);
+        Route::get('getfa', [AdController::class, 'uploadAdsFromAvito']);
+        Route::patch('update', [AdController::class, 'update']);
+        Route::delete('delete', [AdController::class, 'destroy']);
     });
 
 // роуты категорий
     Route::group(['prefix' => 'categories'], function () {
-        Route::get('/', [CategoryAvitoController::class, 'index']);
-        Route::post('add', [CategoryAvitoController::class, 'store']);
-        Route::get('get', [CategoryAvitoController::class, 'show']);
-        Route::patch('update', [CategoryAvitoController::class, 'update']);
-        Route::delete('delete', [CategoryAvitoController::class, 'destroy']);
+        Route::get('/', [CategoryController::class, 'index']);
+        Route::post('add', [CategoryController::class, 'store']);
+        Route::get('get', [CategoryController::class, 'show']);
+        Route::patch('update', [CategoryController::class, 'update']);
+        Route::delete('delete', [CategoryController::class, 'destroy']);
     });
 
 // роуты проектов
