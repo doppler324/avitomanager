@@ -68,7 +68,7 @@ class AvitoApiComponent
         $result = array();
         $response = array();
         // получаем объявления с Авито
-        /*try {
+        try {
             do {
                 // делаем запрос к Авито в цикле, пока не загрузим все объявления, Авито отдает максимум по 100 штук
                 $response =
@@ -95,18 +95,8 @@ class AvitoApiComponent
                 "message" => $ex->getMessage(),
                 "messageFromAvito" => $response
             ];
-        }*/
-        $response =
-            Http::withHeaders(['Authorization' => 'Bearer ' . $this->project->access_token])
-                ->get('https://api.avito.ru/core/v1/items', [
-                    'per_page' => 1,
-                    'page' => 1,
-                    'status' => "active,removed,old,blocked,rejected",
-                ])
-                // если вернулась ошибка, выбрасываем ошибку
-                ->throwIf(!empty($response["code"]) || !$response)
-                ->json();
-        $result = $response["resources"];
+        }
+        return $result;
         #todo добавить вывод в лог добавленных объявлений
         // Добавляем объявления в БД
         foreach ($result as $ad){

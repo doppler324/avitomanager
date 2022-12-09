@@ -54,7 +54,7 @@ class AdController extends Controller
         $project = ProjectModel::find($request->project_id);
         $avito = new AvitoApiComponent($project);
         $result = $avito->loadAds();
-        //return response()->json($result);
+        return response()->json($result);
         if($result["success"] === false){
             return response()->json([
                 "success" => false,
