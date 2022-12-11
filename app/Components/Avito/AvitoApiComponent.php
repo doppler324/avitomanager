@@ -96,7 +96,7 @@ class AvitoApiComponent
                 "messageFromAvito" => $response
             ];
         }
-        return $result;
+
         #todo добавить вывод в лог добавленных объявлений
         // Добавляем объявления в БД
         foreach ($result as $ad){
